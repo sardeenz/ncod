@@ -24,6 +24,8 @@ export class MyComponent {
   esriMapView: __esri.MapView;
   ncodFeatureLayer: __esri.FeatureLayer;
   popupTemplate: __esri.PopupTemplate;
+  searchWidget: __esri.widgetsSearch;
+
   // mapId = '368e5788d14f4f05a90114404fd8189e';
 
   constructor() {
@@ -57,18 +59,23 @@ export class MyComponent {
    */
   componentDidLoad() {
     console.log("componentDidLoad");
-    this.createEsriMapView();
+
+    // view = this.createEsriMapView()
+    //   .then(() => this.setupSearch(view));
+    // this.setupSearch(this.esriMapView);
+    // .then(() => this.addZoomOnClickAndUrlUpdate());
 
   }
 
   componentDidRender() {
+    this.createEsriMapView();
     console.log("componentDidRender");
     // this.initializeMap();
   }
 
   createEsriMapView() {
-    return loadModules(["esri/views/MapView", "esri/PopupTemplate"], this.esriMapOptions).then(
-      ([EsriMapView]: [__esri.MapViewConstructor]) => {
+    return loadModules(["esri/views/MapView", "esri/widgets/Search"], this.esriMapOptions).then(
+      ([EsriMapView, Search]: [__esri.MapViewConstructor, __esri.widgetsSearchConstructor]) => {
         const mapDiv = this.hostElement.querySelector("div");
 
         this.esriMapView = new EsriMapView({
@@ -77,9 +84,57 @@ export class MyComponent {
           center: [-78.6382, 35.7796],
           map: this.esriMap
         });
+
+        this.searchWidget = new Search({
+          view: this.esriMapView
+        });
+        this.esriMapView.ui.add(this.searchWidget, {
+          position: "top-left",
+          index: 2
+        });
+
+
+
+        // return this.esriMapView;
+        // let searchWidget = new Search({
+        //   view: this.esriMapView
+        // });
+        // this.esriMapView.ui.add(searchWidget, {
+        //   position: "top-left",
+        //   index: 2
+        // });
       }
     );
   }
+
+  setupSearch(mapView: __esri.MapView) {
+    loadModules(["esri/widgets/Search"]).then(
+      ([Search]: [__esri.widgetsSearchConstructor]) => {
+        this.searchWidget = new Search({
+          view: mapView
+        });
+        mapView.ui.add(this.searchWidget, {
+          position: "top-left",
+          index: 2
+        });
+      }
+    );
+  }
+  // async setupSearch(mapView: __esri.MapView) {
+  //   let searchWidget;
+  //   console.log('this mapView = ', mapView);
+  //   const [Search] = await loadModules([
+  //     'esri/widgets/Search'
+  //   ]).then(() => searchWidget = new Search({
+  //     view: mapView
+  //   }));
+  //   // Adds the search widget below other elements in
+  //   // the top left corner of the view
+  //   mapView.ui.add(searchWidget, {
+  //     position: "top-left",
+  //     index: 2
+  //   });
+  // }
 
   render() {
 
