@@ -26,10 +26,7 @@ export class MyComponent {
   popupTemplate: __esri.PopupTemplate;
   searchWidget: __esri.widgetsSearch;
 
-  // mapId = '368e5788d14f4f05a90114404fd8189e';
-
   constructor() {
-
     loadModules(
       ["esri/Map", "esri/layers/FeatureLayer"],
       this.esriMapOptions
@@ -41,14 +38,12 @@ export class MyComponent {
         this.esriMap = new EsriMap({
           basemap: "topo"
         });
-
         this.ncodFeatureLayer = new FeatureLayer({
           url: this.ncodUrl,
           popupTemplate: {
             content: "{*}"
           }
         });
-
         this.esriMap.add(this.ncodFeatureLayer);
       }
     );
@@ -58,19 +53,10 @@ export class MyComponent {
    * Only called once per component lifecycle
    */
   componentDidLoad() {
-    console.log("componentDidLoad");
-
-    // view = this.createEsriMapView()
-    //   .then(() => this.setupSearch(view));
-    // this.setupSearch(this.esriMapView);
-    // .then(() => this.addZoomOnClickAndUrlUpdate());
-
   }
 
   componentDidRender() {
     this.createEsriMapView();
-    console.log("componentDidRender");
-    // this.initializeMap();
   }
 
   createEsriMapView() {
@@ -92,52 +78,11 @@ export class MyComponent {
           position: "top-left",
           index: 2
         });
-
-
-
-        // return this.esriMapView;
-        // let searchWidget = new Search({
-        //   view: this.esriMapView
-        // });
-        // this.esriMapView.ui.add(searchWidget, {
-        //   position: "top-left",
-        //   index: 2
-        // });
       }
     );
   }
-
-  setupSearch(mapView: __esri.MapView) {
-    loadModules(["esri/widgets/Search"]).then(
-      ([Search]: [__esri.widgetsSearchConstructor]) => {
-        this.searchWidget = new Search({
-          view: mapView
-        });
-        mapView.ui.add(this.searchWidget, {
-          position: "top-left",
-          index: 2
-        });
-      }
-    );
-  }
-  // async setupSearch(mapView: __esri.MapView) {
-  //   let searchWidget;
-  //   console.log('this mapView = ', mapView);
-  //   const [Search] = await loadModules([
-  //     'esri/widgets/Search'
-  //   ]).then(() => searchWidget = new Search({
-  //     view: mapView
-  //   }));
-  //   // Adds the search widget below other elements in
-  //   // the top left corner of the view
-  //   mapView.ui.add(searchWidget, {
-  //     position: "top-left",
-  //     index: 2
-  //   });
-  // }
 
   render() {
-
     return (
       <div class="my-component" ></div>
     );
