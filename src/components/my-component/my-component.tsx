@@ -11,11 +11,10 @@ export class MyComponent {
   // @Prop() history: RouterHistory;
 
   ncodUrl = 'https://maps.raleighnc.gov/arcgis/rest/services/Planning/Overlays/MapServer/9';
-  /**
-   * esri-loader options
-   */
+
   esriMapOptions = {
-    url: `https://js.arcgis.com/4.11/`
+    url: `https://js.arcgis.com/4.11/`,
+    css: true
   };
 
   /**
@@ -23,11 +22,12 @@ export class MyComponent {
    */
   esriMap: __esri.Map;
   esriMapView: __esri.MapView;
-  municipalitiesFeatureLayer: __esri.FeatureLayer;
+  ncodFeatureLayer: __esri.FeatureLayer;
+  popupTemplate: __esri.PopupTemplate;
   // mapId = '368e5788d14f4f05a90114404fd8189e';
 
-  constructor() { 
-    
+  constructor() {
+
     loadModules(
       ["esri/Map", "esri/layers/FeatureLayer"],
       this.esriMapOptions
@@ -40,15 +40,14 @@ export class MyComponent {
           basemap: "topo"
         });
 
-        this.municipalitiesFeatureLayer = new FeatureLayer({
-          url:
-            "https://maps.raleighnc.gov/arcgis/rest/services/Planning/Overlays/MapServer/9",
-            popupTemplate: {
-              content: "{*}"
-            }
+        this.ncodFeatureLayer = new FeatureLayer({
+          url: this.ncodUrl,
+          popupTemplate: {
+            content: "{*}"
+          }
         });
 
-        this.esriMap.add(this.municipalitiesFeatureLayer);
+        this.esriMap.add(this.ncodFeatureLayer);
       }
     );
   }
@@ -68,7 +67,7 @@ export class MyComponent {
   }
 
   createEsriMapView() {
-    return loadModules(["esri/views/MapView"], this.esriMapOptions).then(
+    return loadModules(["esri/views/MapView", "esri/PopupTemplate"], this.esriMapOptions).then(
       ([EsriMapView]: [__esri.MapViewConstructor]) => {
         const mapDiv = this.hostElement.querySelector("div");
 
@@ -82,65 +81,10 @@ export class MyComponent {
     );
   }
 
-  // async initializeMap() {
-  //   try {
-
-
-  //     const [WebMap, MapView] = await loadModules([
-  //       'esri/Map',
-  //       'esri/views/MapView'
-  //     ]);
-  //     const webmap = new WebMap({
-  //       portalItem: { // autocasts as new PortalItem()
-  //         id: 'f2e9b762544945f390ca4ac3671cfa72'
-  //       }
-  //     });
-  //     let mapDiv = this.hostElement.querySelector("div");
-
-  //     // and we show that map in a container w/ id #viewDiv
-  //     this.esriMapView = new MapView({
-  //       container: mapDiv,
-  //       zoom: 13,
-  //       center: [-78.6382, 35.7796],
-  //       map: webmap
-  //     });
-
-  //     return this.esriMapView;
-  //   } catch (error) {
-  //     console.log('EsriLoader: ', error);
-  //   }
-  // }
   render() {
 
     return (
-      <main style={{ height: "100%" }}>
-
-        <div class="my-component" ></div>
-      </main>
+      <div class="my-component" ></div>
     );
   }
 }
-
-
- // loadCss(`${this.esriMapOptions.url}/esri/css/main.css`);
-
-    // loadModules(
-    //   ["esri/Map", "esri/layers/FeatureLayer"],
-    //   this.esriMapOptions
-    // ).then(
-    //   ([EsriMap, FeatureLayer]: [
-    //     __esri.MapConstructor,
-    //     __esri.FeatureLayerConstructor
-    //   ]) => {
-    //     this.esriMap = new EsriMap({
-    //       basemap: "streets"
-    //     });
-
-    //     this.municipalitiesFeatureLayer = new FeatureLayer({
-    //       url:
-    //         "https://services.arcgis.com/Li1xnxaTwJ2lGrgz/arcgis/rest/services/Kommuner/FeatureServer/0"
-    //     });
-
-    //     return this.esriMap.add(this.municipalitiesFeatureLayer);
-    //   }
-    // );
