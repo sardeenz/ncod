@@ -11,6 +11,7 @@ export class MyComponent {
   // @Prop() history: RouterHistory;
 
   ncodUrl = 'https://maps.raleighnc.gov/arcgis/rest/services/Planning/Overlays/MapServer/9';
+  shodUrl = 'https://maps.raleighnc.gov/arcgis/rest/services/Planning/Overlays/MapServer/7';
 
   esriMapOptions = {
     url: `https://js.arcgis.com/4.11/`,
@@ -23,6 +24,7 @@ export class MyComponent {
   esriMap: __esri.Map;
   esriMapView: __esri.MapView;
   ncodFeatureLayer: __esri.FeatureLayer;
+  shodFeatureLayer: __esri.FeatureLayer;
   popupTemplate: __esri.PopupTemplate;
   searchWidget: __esri.widgetsSearch;
 
@@ -41,10 +43,20 @@ export class MyComponent {
         this.ncodFeatureLayer = new FeatureLayer({
           url: this.ncodUrl,
           popupTemplate: {
+            title: "{OLAY_NAME}",
             content: "{*}"
-          }
+          },
+        });
+        this.shodFeatureLayer = new FeatureLayer({
+          url: this.shodUrl,
+          popupTemplate: {
+            title: "{OLAY_NAME}",
+            content: "{*}"
+          },
         });
         this.esriMap.add(this.ncodFeatureLayer);
+        this.esriMap.add(this.shodFeatureLayer);
+
       }
     );
   }
